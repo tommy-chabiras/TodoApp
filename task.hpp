@@ -20,7 +20,13 @@ class Task
 	QDateTime completedAt{};
 
 public:
-	Task(const QString &t, bool c = false) : title(t), isCompleted(c) {}
+	Task(const QString &t, const QString &d, bool c = false) : title(t), description(d), isCompleted(c) {}
+
+
+	const QString& getTitle() const
+	{
+		return title;
+	}
 
 	QDateTime completed()
 	{

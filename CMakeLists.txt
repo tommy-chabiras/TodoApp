@@ -12,10 +12,9 @@ set(CMAKE_AUTORCC ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 
-qt_add_executable(TodoApp
-    ${PROJECT_SOURCES}
+add_executable(TodoApp
+	main.cpp
 )
-
 
 target_link_libraries(TodoApp PRIVATE Qt6::Widgets)
 

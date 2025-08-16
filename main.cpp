@@ -3,35 +3,53 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPushButton>
+#include <vector>
 #include "task.hpp"
+
+void addTasks(QVBoxLayout *layout, std::vector<Task> &tasks);
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
+	QApplication app(argc, argv);
 
-    QWidget window;
-    window.setWindowTitle("TodoApp");
+	QWidget window;
+	window.setWindowTitle("TodoApp");
 
-    window.resize(300, 200);
+	window.resize(300, 200);
 
 	auto *layout = new QVBoxLayout(&window);
 
 	QLabel *label = new QLabel("text");
-    QPushButton *button  = new QPushButton("Add Task");
+	QPushButton *button = new QPushButton("Add Task");
 
-    // button.resize(200, 50);
-    // button.show();
+	// button.resize(200, 50);
+	// button.show();
 
-    layout->addWidget(label);
-    layout->addWidget(button);
+	layout->addWidget(label);
+	layout->addWidget(button);
 
-    window.setLayout(layout);
-    window.show();
+	std::vector<Task> tasks = {
+		Task("task 1", "task 1 desc", false),
+		Task("task 2", "task 2 desc", false)
 
-    // qDebug() << "Hello World!";
+	};
+	addTasks(layout, tasks);
 
-    // QLabel label("Hello, This is a GUI app");
+	window.setLayout(layout);
+	window.show();
 
+	// qDebug() << "Hello World!";
 
-    return app.exec();
+	// QLabel label("Hello, This is a GUI app");
+
+	return app.exec();
+}
+
+void addTasks(QVBoxLayout *layout, std::vector<Task> &tasks)
+{
+	for (const auto &task : tasks)
+	{
+		QLabel *label = new QLabel(task.getTitle());
+		layout->addWidget(label);
+	}
 }
