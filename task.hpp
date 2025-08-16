@@ -27,6 +27,10 @@ public:
 	{
 		return title;
 	}
+	const QString& getDescription() const
+	{
+		return description;
+	}
 
 	QDateTime completed()
 	{

@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 
 	window.resize(300, 200);
 
-	auto *layout = new QVBoxLayout(&window);
+	QVBoxLayout* mainLayout = new QVBoxLayout(&window);
 
 	QLabel *label = new QLabel("text");
 	QPushButton *button = new QPushButton("Add Task");
@@ -25,17 +25,19 @@ int main(int argc, char *argv[])
 	// button.resize(200, 50);
 	// button.show();
 
-	layout->addWidget(label);
-	layout->addWidget(button);
+	mainLayout->addWidget(label);
+
 
 	std::vector<Task> tasks = {
 		Task("task 1", "task 1 desc", false),
 		Task("task 2", "task 2 desc", false)
 
 	};
-	addTasks(layout, tasks);
+	addTasks(mainLayout, tasks);
 
-	window.setLayout(layout);
+	mainLayout->addWidget(button);
+
+	window.setLayout(mainLayout);
 	window.show();
 
 	// qDebug() << "Hello World!";
@@ -45,11 +47,17 @@ int main(int argc, char *argv[])
 	return app.exec();
 }
 
-void addTasks(QVBoxLayout *layout, std::vector<Task> &tasks)
+void addTasks(QVBoxLayout *mainLayout, std::vector<Task> &tasks)
 {
 	for (const auto &task : tasks)
 	{
-		QLabel *label = new QLabel(task.getTitle());
-		layout->addWidget(label);
+		QHBoxLayout* row = new QHBoxLayout;
+		QLabel *title = new QLabel(task.getTitle());
+		QLabel *desc = new QLabel(task.getDescription());
+		QLabel *com = new QLabel(task.getDescription());
+		row->addWidget(title);
+		row->addWidget(desc);
+
+		mainLayout->addLayout(row);
 	}
 }
