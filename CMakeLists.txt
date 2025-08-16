@@ -4,6 +4,7 @@ project(TodoApp LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -11,9 +12,10 @@ set(CMAKE_AUTORCC ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 
-add_executable(TodoApp
-	main.cpp
+qt_add_executable(TodoApp
+    ${PROJECT_SOURCES}
 )
+
 
 target_link_libraries(TodoApp PRIVATE Qt6::Widgets)
 

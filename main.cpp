@@ -3,6 +3,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPushButton>
+#include "task.hpp"
 
 int main(int argc, char *argv[])
 {
