@@ -5,6 +5,7 @@
 #include <QPushButton>
 #include <vector>
 #include "task.hpp"
+#include "taskdatabase.hpp"
 
 void addTasks(QVBoxLayout *layout, std::vector<Task> &tasks);
 
@@ -54,7 +55,6 @@ void addTasks(QVBoxLayout *mainLayout, std::vector<Task> &tasks)
 		QHBoxLayout* row = new QHBoxLayout;
 		QLabel *title = new QLabel(task.getTitle());
 		QLabel *desc = new QLabel(task.getDescription());
-		QLabel *com = new QLabel(task.getDescription());
 		row->addWidget(title);
 		row->addWidget(desc);
 

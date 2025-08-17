@@ -10,13 +10,24 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Sql)
 
-add_executable(TodoApp
-	main.cpp
+set(PROJECT_SOURCES
+    main.cpp
+    task.cpp
+    taskdatabase.cpp
 )
 
-target_link_libraries(TodoApp PRIVATE Qt6::Widgets)
+qt_add_executable(TodoApp
+    ${PROJECT_SOURCES}
+)
+
+target_link_libraries(TodoApp PRIVATE Qt6::Widgets Qt6::Sql)
+
+
+set_target_properties(TodoApp PROPERTIES
+    WIN32_EXECUTABLE FALSE
+)
 
 include(GNUInstallDirs)
 install(TARGETS TodoApp
