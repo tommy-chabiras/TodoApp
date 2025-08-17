@@ -7,7 +7,7 @@
 #include "task.hpp"
 #include "taskdatabase.hpp"
 
-void addTasks(QVBoxLayout *layout, std::vector<Task> &tasks);
+void displayTasks(QVBoxLayout *layout, const std::vector<Task> &tasks);
 
 int main(int argc, char *argv[])
 {
@@ -29,12 +29,14 @@ int main(int argc, char *argv[])
 	mainLayout->addWidget(label);
 
 
-	std::vector<Task> tasks = {
-		Task("task 1", "task 1 desc", false),
-		Task("task 2", "task 2 desc", false)
+	// std::vector<Task> tasks = {
+	// 	Task("task 1", "task 1 desc", false),
+	// 	Task("task 2", "task 2 desc", false)
 
-	};
-	addTasks(mainLayout, tasks);
+	// };
+	TaskDatabase db = TaskDatabase();
+	db.addTask(Task("task 1", "task 1 desc", false));
+	displayTasks(mainLayout, db.loadTasks());
 
 	mainLayout->addWidget(button);
 
@@ -48,7 +50,7 @@ int main(int argc, char *argv[])
 	return app.exec();
 }
 
-void addTasks(QVBoxLayout *mainLayout, std::vector<Task> &tasks)
+void displayTasks(QVBoxLayout *mainLayout, const std::vector<Task> &tasks)
 {
 	for (const auto &task : tasks)
 	{

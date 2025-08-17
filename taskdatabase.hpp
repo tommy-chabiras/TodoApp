@@ -1,5 +1,5 @@
-#ifndef TASKDATA_HPP
-#define TASKDATA_HPP
+#ifndef TASKDATABASE_HPP
+#define TASKDATABASE_HPP
 
 
 #include <QSqlDatabase>
@@ -12,14 +12,17 @@
 
 class TaskDatabase
 {
-	QSqlDatabase db;
+	static QSqlDatabase db;
 
 public:
 	TaskDatabase(const QString& dbName = "tasks.db");
 	~TaskDatabase();
 
-	std::vector<Task> getTasks();
-	void addTask(Task &task);
+	static unsigned int generateId();
+	std::vector<Task> loadTasks();
+	void addTask(const Task &task);
+	void updateTask(const Task &task);
+	void deleteTask(const QString &title);
 };
 
 #endif

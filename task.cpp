@@ -5,15 +5,26 @@
 	{
 		return title;
 	}
+	
 	const QString& Task::getDescription() const
 	{
 		return description;
 	}
 
-	QDateTime Task::completed()
+	unsigned int Task::getId() const
+	{
+		return id;
+	}
+
+	bool Task::isCompleted() const
+	{
+		return completed;
+	}
+
+	QDateTime Task::taskCompleted()
 	{
 		completedAt = QDateTime::currentDateTime();
-		isCompleted = true;
+		completed = true;
 		return completedAt;
 	}
 
