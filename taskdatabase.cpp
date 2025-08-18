@@ -5,7 +5,6 @@ QSqlDatabase TaskDatabase::db;
 
 TaskDatabase::TaskDatabase(const QString &dbName)
 {
-	qDebug() << "tst";
 	db = QSqlDatabase::addDatabase("QSQLITE");
 	db.setDatabaseName(dbName);
 
