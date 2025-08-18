@@ -12,14 +12,21 @@ set(CMAKE_AUTORCC ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Sql)
 
+
+file(GLOB WIDGET_SOURCES "src/widgets/*.cpp")
+file(GLOB SOURCES "src/*.cpp")
+
 set(PROJECT_SOURCES
-    main.cpp
-    task.cpp
-    taskdatabase.cpp
+	${SOURCES}
+	${WIDGET_SOURCES}
 )
 
 qt_add_executable(TodoApp
-    ${PROJECT_SOURCES}
+	${PROJECT_SOURCES}
+)
+target_include_directories(TodoApp PRIVATE
+    src
+    src/widgets
 )
 
 target_link_libraries(TodoApp PRIVATE Qt6::Widgets Qt6::Sql)

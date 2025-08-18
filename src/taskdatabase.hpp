@@ -23,7 +23,7 @@ public:
 	std::vector<Task> loadTasks();
 	void addTask(const Task &task);
 	void updateTask(const Task &task);
-	void deleteTask(const QString &title);
+	static void deleteTask(unsigned int id);
 };
 
 #endif

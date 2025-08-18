@@ -91,11 +91,11 @@ void TaskDatabase::updateTask(const Task &task)
 	}
 }
 
-void TaskDatabase::deleteTask(const QString &title)
+void TaskDatabase::deleteTask(unsigned int id)
 {
 	QSqlQuery query;
-	query.prepare("DELETE FROM tasks WHERE title = :title");
-	query.bindValue(":title", title);
+	query.prepare("DELETE FROM tasks WHERE id = :id");
+	query.bindValue(":id", id);
 
 	if (!query.exec())
 	{
