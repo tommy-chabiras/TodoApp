@@ -1,10 +1,18 @@
 
 #include "taskdatabase.hpp"
 
+QSqlDatabase TaskDatabase::db;
+
 TaskDatabase::TaskDatabase(const QString &dbName)
 {
+	qDebug() << "tst";
 	db = QSqlDatabase::addDatabase("QSQLITE");
 	db.setDatabaseName(dbName);
+
+    if (!db.open()) {
+        qDebug() << "Failed to connect to the database!";
+    }
+
 
 	QSqlQuery query;
 	query.exec("CREATE TABLE IF NOT EXISTS tasks ("
@@ -28,10 +36,11 @@ unsigned int TaskDatabase::generateId()
 {
 	QSqlQuery query("SELECT IFNULL(MAX(id), 0) + 1 FROM tasks");
 
-    if (query.next()) {
-        return query.value(0).toUInt();
-    }
-    return 1;
+	if (query.next())
+	{
+		return query.value(0).toUInt();
+	}
+	return 1;
 }
 
 std::vector<Task> TaskDatabase::loadTasks()
@@ -50,7 +59,7 @@ std::vector<Task> TaskDatabase::loadTasks()
 		tasks.emplace_back(id, title, description, completed);
 	}
 
-	return std::vector<Task>();
+	return tasks;
 }
 
 void TaskDatabase::addTask(const Task &task)

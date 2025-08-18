@@ -9,6 +9,7 @@
 #include <vector>
 #include "task.hpp"
 
+class Task;
 
 class TaskDatabase
 {

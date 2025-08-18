@@ -1,41 +1,47 @@
 #include "task.hpp"
 
 
-	const QString& Task::getTitle() const
-	{
-		return title;
-	}
-	
-	const QString& Task::getDescription() const
-	{
-		return description;
-	}
+Task::Task(const QString &t, const QString &d, bool c)
+	: title(t), description(d), completed(c)
+{
+	id = TaskDatabase::generateId();
+}
 
-	unsigned int Task::getId() const
-	{
-		return id;
-	}
+const QString &Task::getTitle() const
+{
+	return title;
+}
 
-	bool Task::isCompleted() const
-	{
-		return completed;
-	}
+const QString &Task::getDescription() const
+{
+	return description;
+}
 
-	QDateTime Task::taskCompleted()
-	{
-		completedAt = QDateTime::currentDateTime();
-		completed = true;
-		return completedAt;
-	}
+unsigned int Task::getId() const
+{
+	return id;
+}
 
-	Task& Task::updateTask(const TaskUpdate &upd)
-	{
-		if (upd.title)
-			title = *upd.title;
-		if (upd.description)
-			description = *upd.description;
-		if (upd.startedAt)
-			startedAt = *upd.startedAt;
+bool Task::isCompleted() const
+{
+	return completed;
+}
 
-		return *this;
-	}
+QDateTime Task::taskCompleted()
+{
+	completedAt = QDateTime::currentDateTime();
+	completed = true;
+	return completedAt;
+}
+
+Task &Task::updateTask(const TaskUpdate &upd)
+{
+	if (upd.title)
+		title = *upd.title;
+	if (upd.description)
+		description = *upd.description;
+	if (upd.startedAt)
+		startedAt = *upd.startedAt;
+
+	return *this;
+}

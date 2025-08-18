@@ -4,6 +4,8 @@
 #include <QLabel>
 #include <QPushButton>
 #include <vector>
+
+#include <iostream>
 #include "task.hpp"
 #include "taskdatabase.hpp"
 
@@ -34,9 +36,14 @@ int main(int argc, char *argv[])
 	// 	Task("task 2", "task 2 desc", false)
 
 	// };
-	TaskDatabase db = TaskDatabase();
-	db.addTask(Task("task 1", "task 1 desc", false));
-	displayTasks(mainLayout, db.loadTasks());
+
+	TaskDatabase db("tasks.db");
+
+	db.addTask(Task("task 1", "task 1 desc"));
+	auto tasks = db.loadTasks();
+	
+	std::cout << tasks[0].getTitle().toStdString();
+	displayTasks(mainLayout, tasks);
 
 	mainLayout->addWidget(button);
 
