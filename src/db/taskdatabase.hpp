@@ -7,7 +7,7 @@
 #include <QSqlError>
 #include <QDebug>
 #include <vector>
-#include "task.hpp"
+#include "../model/task.hpp"
 
 class Task;
 
@@ -20,7 +20,7 @@ public:
 	~TaskDatabase();
 
 	static unsigned int generateId();
-	std::vector<Task> loadTasks();
+	QVector<Task*> loadTasks();
 	void addTask(const Task &task);
 	void updateTask(const Task &task);
 	static void deleteTask(unsigned int id);

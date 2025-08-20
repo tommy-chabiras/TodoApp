@@ -9,27 +9,44 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
+set(QT_QML_GENERATE_QMLLS_INI ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Sql)
+find_package(Qt6 REQUIRED COMPONENTS Core Quick Sql QuickControls2)
 
 
-file(GLOB WIDGET_SOURCES "src/widgets/*.cpp")
-file(GLOB SOURCES "src/*.cpp")
+file(GLOB_RECURSE SOURCES "src/*.cpp")
+file(GLOB_RECURSE HEADERS "src/*.hpp")
 
-set(PROJECT_SOURCES
-	${SOURCES}
-	${WIDGET_SOURCES}
+
+
+qt_add_resources(RESOURCES
+    resources/qml.qrc
 )
 
 qt_add_executable(TodoApp
-	${PROJECT_SOURCES}
-)
-target_include_directories(TodoApp PRIVATE
-    src
-    src/widgets
+	${SOURCES}
+	${HEADERS}
+	${RESOURCES}
 )
 
-target_link_libraries(TodoApp PRIVATE Qt6::Widgets Qt6::Sql)
+
+qt_add_qml_module(TodoApp
+    URI TodoApp
+    VERSION 1.0
+    QML_FILES
+        resources/qml/main.qml
+)
+
+target_include_directories(TodoApp PRIVATE
+    src
+)
+
+target_link_libraries(TodoApp PRIVATE
+    Qt6::Core
+    Qt6::Quick
+    Qt6::Sql
+	Qt6::QuickControls2
+)
 
 
 set_target_properties(TodoApp PROPERTIES

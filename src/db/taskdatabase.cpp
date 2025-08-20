@@ -42,9 +42,9 @@ unsigned int TaskDatabase::generateId()
 	return 1;
 }
 
-std::vector<Task> TaskDatabase::loadTasks()
+QVector<Task*> TaskDatabase::loadTasks()
 {
-	std::vector<Task> tasks;
+	QVector<Task*> tasks;
 
 	QSqlQuery query("SELECT id, title, description, completed FROM tasks");
 
@@ -55,7 +55,7 @@ std::vector<Task> TaskDatabase::loadTasks()
 		QString description = query.value(2).toString();
 		bool completed = query.value(3).toInt();
 
-		tasks.emplace_back(id, title, description, completed);
+		tasks.append(new Task(id, title, description, completed));
 	}
 
 	return tasks;
@@ -80,7 +80,8 @@ void TaskDatabase::updateTask(const Task &task)
 {
 	QSqlQuery query;
 	query.prepare("UPDATE tasks SET description = :description, completed = :completed "
-				  "WHERE title = :title");
+				  "WHERE id = :id");
+	query.bindValue(":id", task.getId());
 	query.bindValue(":title", task.getTitle());
 	query.bindValue(":description", task.getDescription());
 	query.bindValue(":completed", task.isCompleted() ? 1 : 0);
