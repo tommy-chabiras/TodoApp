@@ -7,20 +7,24 @@ ApplicationWindow {
     height: 300
     title: "TodoApp"
 
-    ListView {
-        anchors.fill: parent
-        model: ListModel {
-            // simple ListModel avoids unqualified access
-            ListElement {
-                title: "Task 1"
-            }
-            ListElement {
-                title: "Task 2"
-            }
+    ListModel {
+        id: items
+
+        ListElement {
+            name: "Task 1"
         }
-        delegate: Text {
-            id: taskItem
-            text: taskItem.title   // ✅ explicitly referencing this element
+        ListElement {
+            name: "Task 2"
+        }
+    }
+    ListView {
+        id: listview
+        anchors.fill: parent
+        model: items
+
+        delegate: Label {
+            required property string name
+            text: name
         }
     }
 }
