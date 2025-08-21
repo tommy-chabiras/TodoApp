@@ -1,9 +1,11 @@
 import QtQuick 6.5
 import QtQuick.Controls 6.5
+import QtQuick.Controls.Material 6.5
+import QtQuick.Layouts 1.4
 
 ApplicationWindow {
     visible: true
-    width: 400
+    width: 500
     height: 300
     title: "TodoApp"
 
@@ -12,8 +14,10 @@ ApplicationWindow {
         model: taskManager
 
         delegate: Rectangle {
-            width: 250
+            id: rowRect
             height: 40
+            width: 400
+
             color: index % 2 === 0 ? "#f0f0f0" : "#ffffff"
             border.color: "#cccccc"
             border.width: 1
@@ -21,42 +25,64 @@ ApplicationWindow {
             radius: 10
             anchors.horizontalCenter: parent.horizontalCenter
 
-            Row {
+            MouseArea {
+                hoverEnabled: true
+                anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
+                onEntered: parent.color = "#c7c2c2"
+                onExited: parent.color = index % 2 === 0 ? "#f0f0f0" : "#ffffff"
+            }
 
+            RowLayout {
+                id: rowContent
                 anchors.fill: parent
                 anchors.margins: 5
                 spacing: 10
 
                 Text {
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: (index + 1) + "."    // Numbering starts from 1
+                    text: (index + 1) + "."
                     font.bold: true
+					Layout.fillHeight: true
+                    verticalAlignment: Text.AlignVCenter
                 }
 
                 Text {
-                    anchors.verticalCenter: parent.verticalCenter
                     text: model.title
+					Layout.fillHeight: true
+                    verticalAlignment: Text.AlignVCenter
                 }
 
                 Text {
-                    anchors.verticalCenter: parent.verticalCenter
                     text: model.description
+					Layout.fillHeight: true
+                    verticalAlignment: Text.AlignVCenter
                 }
-            }
-            MouseArea {
-                hoverEnabled: true
-                anchors.fill: parent
-				cursorShape: Qt.PointingHandCursor
-                onEntered: parent.color = "#c7c2c2"
-                onExited: parent.color = index % 2 === 0 ? "#f0f0f0" : "#ffffff"
+
+
+                Item {
+                    Layout.fillWidth: true
+                }
+
+                Button {
+                    text: "Edit"
+                    Layout.alignment: Qt.AlignVCenter
+					Layout.fillHeight: true 
+                    background: Rectangle {
+                        color: "#b3b3b3"
+                        radius: 10
+                    }
+                }
+
+                Button {
+                    text: "Remove"
+                    Layout.alignment: Qt.AlignVCenter
+					Layout.fillHeight: true 
+                    background: Rectangle {
+                        color: "#FF0000"
+                        radius: 10
+                    }
+                }
             }
         }
-    }
-
-    Button {
-        text: "Add Task"
-        anchors.bottom: parent.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
-        onClicked: taskManager.addTask("New from QML", "test")
     }
 }
