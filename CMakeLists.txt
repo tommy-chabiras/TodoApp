@@ -18,6 +18,7 @@ file(GLOB_RECURSE SOURCES "src/*.cpp")
 file(GLOB_RECURSE HEADERS "src/*.hpp")
 
 
+
 qt_policy(SET QTP0001 NEW)
 qt_policy(SET QTP0004 NEW)
 
@@ -54,6 +55,10 @@ target_link_libraries(TodoApp PRIVATE
 
 set_target_properties(TodoApp PROPERTIES
     WIN32_EXECUTABLE FALSE
+)
+
+target_compile_definitions(TodoApp PRIVATE
+    $<$<CONFIG:Debug>:DEV>
 )
 
 include(GNUInstallDirs)

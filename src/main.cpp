@@ -1,27 +1,48 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QDir>
+#include <QFileSystemWatcher>
+#include <QDebug>
+
 #include "model/task.hpp"
 #include "db/taskdatabase.hpp"
 #include "managers/taskmanager.hpp"
 
-
 int main(int argc, char *argv[])
 {
 	QGuiApplication app(argc, argv);
-
-	TaskDatabase db("tasks.db");
-
-	QVector<Task*> tasks = db.loadTasks();
-
-	db.addTask(Task("Sample Task", "This is a test task"));
-
-
 	QQmlApplicationEngine engine;
 
-	engine.rootContext()->setContextProperty("tasksList", QVariant::fromValue(tasks));
+	TaskDatabase db("tasks.db");
+	TaskManager taskManager(db);
 
-	engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
+	engine.rootContext()->setContextProperty("taskManager", &taskManager);
+
+	#ifdef DEV
+		QString qmlPath = QDir(QCoreApplication::applicationDirPath())
+							.absoluteFilePath("../resources/qml/main.qml");
+
+		engine.load(QUrl::fromLocalFile(qmlPath));
+
+		QFileSystemWatcher watcher;
+		watcher.addPath(qmlPath);
+
+		QObject::connect(&watcher, &QFileSystemWatcher::fileChanged,
+						[&engine, qmlPath](const QString &)
+						{
+							qDebug() << "QML file changed. Reloading...";
+							for (QObject *obj : engine.rootObjects())
+							{
+								delete obj;
+							}
+							engine.clearComponentCache();
+							engine.load(QUrl::fromLocalFile(qmlPath));
+						});
+	#else
+		engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
+	#endif
+
 	if (engine.rootObjects().isEmpty())
 		return -1;
 
