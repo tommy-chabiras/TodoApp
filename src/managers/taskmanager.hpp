@@ -1,30 +1,40 @@
 #ifndef TASKMANAGER_HPP
 #define TASKMANAGER_HPP
 
+#include <QAbstractListModel>
 #include <QObject>
-#include <QVector>
+#include <QHash>
 #include <QDebug>
 #include "../model/task.hpp"
 #include "../db/taskdatabase.hpp"
 
-class TaskManager : public QObject
+class TaskManager : public QAbstractListModel
 {
-    Q_OBJECT
-	Q_PROPERTY(QVector<QObject*> tasks READ tasks NOTIFY tasksChanged)
+	Q_OBJECT
 private:
-    TaskDatabase& m_db;
-    QVector<QObject*> m_tasks;
-	
+	TaskDatabase &m_db;
+	QVector<Task *> m_tasks;
+
 public:
-	explicit TaskManager(TaskDatabase& db, QObject* parent = nullptr);
+    enum TaskRoles {
+        TitleRole = Qt::UserRole + 1,
+        DescriptionRole,
+        CompletedRole
+    };
+	
+	explicit TaskManager(TaskDatabase &db, QAbstractListModel *parent = nullptr);
 
-    Q_INVOKABLE void addTask(const Task&);
-    Q_INVOKABLE void removeTask(unsigned int id);
+	int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+	QVariant data(const QModelIndex& index, int role) const override;
+	QHash<int, QByteArray> roleNames() const override;
 
-    Q_INVOKABLE QVector<QObject*> tasks() const;
+	Q_INVOKABLE void addTask(const Task &);
+	Q_INVOKABLE void removeTask(unsigned int row);
+
+	Q_INVOKABLE QVector<QObject *> tasks() const;
 
 signals:
-    void tasksChanged();
+	void tasksChanged();
 };
 
 #endif
