@@ -29,6 +29,7 @@ public:
 	QHash<int, QByteArray> roleNames() const override;
 
 	Q_INVOKABLE void addTask(const Task &);
+	Q_INVOKABLE void editTask(const Task &);
 	Q_INVOKABLE void removeTask(unsigned int row);
 
 	Q_INVOKABLE QVector<QObject *> tasks() const;

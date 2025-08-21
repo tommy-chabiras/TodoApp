@@ -47,6 +47,12 @@ Q_INVOKABLE void TaskManager::addTask(const Task &task)
 	emit tasksChanged();
 }
 
+Q_INVOKABLE void TaskManager::editTask(const Task &task)
+{
+	m_db.updateTask(task);
+	emit tasksChanged();
+}
+
 void TaskManager::removeTask(unsigned int row)
 {
     if (row < 0 || row >= m_tasks.size()) return;
@@ -56,6 +62,7 @@ void TaskManager::removeTask(unsigned int row)
     m_db.deleteTask(task->getId());
     task->deleteLater();
     endRemoveRows();
+	emit tasksChanged();
 }
 
 QVector<QObject *> TaskManager::tasks() const
