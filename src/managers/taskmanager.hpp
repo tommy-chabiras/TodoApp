@@ -16,21 +16,24 @@ private:
 	QVector<Task *> m_tasks;
 
 public:
-    enum TaskRoles {
-        TitleRole = Qt::UserRole + 1,
-        DescriptionRole,
-        CompletedRole
-    };
-	
+	enum TaskRoles
+	{
+		IdRole = Qt::UserRole + 1,
+		TitleRole,
+		DescriptionRole,
+		CompletedRole
+	};
+
 	explicit TaskManager(TaskDatabase &db, QAbstractListModel *parent = nullptr);
 
 	int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-	QVariant data(const QModelIndex& index, int role) const override;
+	QVariant data(const QModelIndex &index, int role) const override;
 	QHash<int, QByteArray> roleNames() const override;
 
 	Q_INVOKABLE void addTask(const Task &);
 	Q_INVOKABLE void editTask(const Task &);
-	Q_INVOKABLE void removeTask(unsigned int row);
+	Q_INVOKABLE void removeTask(unsigned int id);
+	Q_INVOKABLE void removeTask(const QList<unsigned int> &ids);
 
 	Q_INVOKABLE QVector<QObject *> tasks() const;
 

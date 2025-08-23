@@ -21,7 +21,7 @@ public:
 
 	static unsigned int generateId();
 	QVector<Task*> loadTasks();
-	void addTask(const Task &task);
+	void addTask(Task &task);
 	void updateTask(const Task &task);
 	static void deleteTask(unsigned int id);
 };

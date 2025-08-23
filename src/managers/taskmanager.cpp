@@ -20,6 +20,8 @@ QVariant TaskManager::data(const QModelIndex &index, int role) const
 	Task *task = m_tasks[index.row()];
 	switch (role)
 	{
+	case IdRole:
+		return task->getId();
 	case TitleRole:
 		return task->getTitle();
 	case DescriptionRole:
@@ -34,6 +36,7 @@ QVariant TaskManager::data(const QModelIndex &index, int role) const
 QHash<int, QByteArray> TaskManager::roleNames() const
 {
 	QHash<int, QByteArray> roles;
+	roles[IdRole] = "id";
 	roles[TitleRole] = "title";
 	roles[DescriptionRole] = "description";
 	roles[CompletedRole] = "completed";
@@ -42,9 +45,13 @@ QHash<int, QByteArray> TaskManager::roleNames() const
 
 Q_INVOKABLE void TaskManager::addTask(const Task &task)
 {
-	m_tasks.append(new Task(task.getTitle(), task.getDescription(), task.isCompleted(), this));
-	m_db.addTask(task);
-	emit tasksChanged();
+	m_db.addTask(const_cast<Task &>(task));
+
+	Task *newTask = task.clone();
+	
+	beginInsertRows(QModelIndex(), m_tasks.size(), m_tasks.size());
+	m_tasks.append(newTask);
+	endInsertRows();
 }
 
 Q_INVOKABLE void TaskManager::editTask(const Task &task)
@@ -53,15 +60,42 @@ Q_INVOKABLE void TaskManager::editTask(const Task &task)
 	emit tasksChanged();
 }
 
-void TaskManager::removeTask(unsigned int row)
+Q_INVOKABLE void TaskManager::removeTask(unsigned int id)
 {
-    if (row < 0 || row >= m_tasks.size()) return;
+	for (int row = 0; row < m_tasks.size(); ++row)
+	{
+		Task *task = m_tasks.at(row);
+		if (task->getId() == id)
+		{
+			beginRemoveRows(QModelIndex(), row, row);
 
-    beginRemoveRows(QModelIndex(), row, row);
-    Task *task = m_tasks.takeAt(row);
-    m_db.deleteTask(task->getId());
-    task->deleteLater();
-    endRemoveRows();
+			m_tasks.removeAt(row);
+			m_db.deleteTask(id);
+			task->deleteLater();
+
+			endRemoveRows();
+			emit tasksChanged();
+			return;
+		}
+	}
+}
+
+Q_INVOKABLE void TaskManager::removeTask(const QList<unsigned int> &ids)
+{
+	for (int row = 0; row < m_tasks.size(); ++row)
+	{
+		Task *task = m_tasks.at(row);
+		if (ids.contains(task->getId()))
+		{
+			beginRemoveRows(QModelIndex(), row, row);
+
+			m_tasks.removeAt(row);
+			m_db.deleteTask(task->getId());
+			task->deleteLater();
+
+			endRemoveRows();
+		}
+	}
 	emit tasksChanged();
 }
 

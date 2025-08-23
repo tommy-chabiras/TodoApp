@@ -61,7 +61,7 @@ QVector<Task*> TaskDatabase::loadTasks()
 	return tasks;
 }
 
-void TaskDatabase::addTask(const Task &task)
+void TaskDatabase::addTask(Task &task)
 {
 	QSqlQuery query;
 	query.prepare("INSERT INTO tasks (title, description, completed) "
@@ -73,6 +73,10 @@ void TaskDatabase::addTask(const Task &task)
 	if (!query.exec())
 	{
 		qDebug() << "Add task failed:" << query.lastError().text();
+	}
+	QVariant id = query.lastInsertId();
+	if (id.isValid()) {
+		task.setId(id.toUInt());
 	}
 }
 

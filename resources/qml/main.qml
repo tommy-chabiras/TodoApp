@@ -23,7 +23,6 @@ ApplicationWindow {
             border.width: 1
 
             radius: 10
-            anchors.horizontalCenter: parent.horizontalCenter
 
             MouseArea {
                 hoverEnabled: true
@@ -42,22 +41,21 @@ ApplicationWindow {
                 Text {
                     text: (index + 1) + "."
                     font.bold: true
-					Layout.fillHeight: true
+                    Layout.fillHeight: true
                     verticalAlignment: Text.AlignVCenter
                 }
 
                 Text {
                     text: model.title
-					Layout.fillHeight: true
+                    Layout.fillHeight: true
                     verticalAlignment: Text.AlignVCenter
                 }
 
                 Text {
                     text: model.description
-					Layout.fillHeight: true
+                    Layout.fillHeight: true
                     verticalAlignment: Text.AlignVCenter
                 }
-
 
                 Item {
                     Layout.fillWidth: true
@@ -65,8 +63,8 @@ ApplicationWindow {
 
                 Button {
                     text: "Edit"
-                    Layout.alignment: Qt.AlignVCenter
-					Layout.fillHeight: true 
+                    // Layout.alignment: Qt.AlignVCenter
+                    Layout.fillHeight: true
                     background: Rectangle {
                         color: "#b3b3b3"
                         radius: 10
@@ -75,13 +73,24 @@ ApplicationWindow {
 
                 Button {
                     text: "Remove"
-                    Layout.alignment: Qt.AlignVCenter
-					Layout.fillHeight: true 
+                    // Layout.alignment: Qt.AlignVCenter
+                    // Layout.fillHeight: true
                     background: Rectangle {
                         color: "#FF0000"
                         radius: 10
                     }
+                    onClicked: {
+                        taskManager.removeTask(model.id);
+                    }
                 }
+            }
+        }
+        Button {
+            text: "Create Test Task"
+            anchors.bottom: parent.bottom
+            anchors.horizontalCenter: parent.horizontalCenter
+            onClicked: {
+                testHelper.createTestTask();
             }
         }
     }

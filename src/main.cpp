@@ -8,6 +8,7 @@
 #include "model/task.hpp"
 #include "db/taskdatabase.hpp"
 #include "managers/taskmanager.hpp"
+#include "helpers/testhelper.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -19,29 +20,33 @@ int main(int argc, char *argv[])
 
 	engine.rootContext()->setContextProperty("taskManager", &taskManager);
 
-	#ifdef DEV
-		QString qmlPath = QDir(QCoreApplication::applicationDirPath())
-							.absoluteFilePath("../resources/qml/main.qml");
+#ifdef DEV
+	TestHelper testHelper(&taskManager);
 
-		engine.load(QUrl::fromLocalFile(qmlPath));
+	engine.rootContext()->setContextProperty("testHelper", &testHelper);
+	
+	QString qmlPath = QDir(QCoreApplication::applicationDirPath())
+						  .absoluteFilePath("../resources/qml/main.qml");
 
-		QFileSystemWatcher watcher;
-		watcher.addPath(qmlPath);
+	engine.load(QUrl::fromLocalFile(qmlPath));
 
-		QObject::connect(&watcher, &QFileSystemWatcher::fileChanged,
-						[&engine, qmlPath](const QString &)
-						{
-							qDebug() << "QML file changed. Reloading...";
-							for (QObject *obj : engine.rootObjects())
-							{
-								delete obj;
-							}
-							engine.clearComponentCache();
-							engine.load(QUrl::fromLocalFile(qmlPath));
-						});
-	#else
-		engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
-	#endif
+	QFileSystemWatcher watcher;
+	watcher.addPath(qmlPath);
+
+	QObject::connect(&watcher, &QFileSystemWatcher::fileChanged,
+					 [&engine, qmlPath](const QString &)
+					 {
+						 qDebug() << "QML file changed. Reloading...";
+						 for (QObject *obj : engine.rootObjects())
+						 {
+							 delete obj;
+						 }
+						 engine.clearComponentCache();
+						 engine.load(QUrl::fromLocalFile(qmlPath));
+					 });
+#else
+	engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
+#endif
 
 	if (engine.rootObjects().isEmpty())
 		return -1;
